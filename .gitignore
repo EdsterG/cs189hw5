@@ -1,0 +1,8 @@
+*.aux
+*.gz
+*.log
+*.out
+*.pdf
+*.mat
+*.fdb_latexmk
+readings/
