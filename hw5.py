@@ -22,6 +22,7 @@ Xtest = (Xtest > 0)
 # calculate H(X)
 data_entropy = entropy(y) # ~0.97
 
+max_info_feature(data,y)
 
 
 
