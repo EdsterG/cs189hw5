@@ -20,9 +20,10 @@ X = (X > 0) # convert train/test into matrix of logicals
 Xtest = (Xtest > 0)
 
 # calculate H(X)
-data_entropy = entropy(y) # ~0.97
+data_entropy = H(y) # ~0.97
+print data_entropy
 
-max_info_feature(data,y)
+max_info_feature(X,y)
 
 
 
