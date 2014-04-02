@@ -30,21 +30,40 @@ def entropy(y):
 
 class DecisionTree:
 
-    def __init__(self,x,y):
+    def __init__(self,data,y):
         #The decision tree will recursively auto train when initialized with data (x,y)
-        self.train(x,y)
-
         self.left = None
         self.right = None
-        self.feature = None
+        self.featureIndex = None
         self.leaf = False
         self.label = None
 
-    def train(self,x,y):
-        if x:
-            for feature in 
+        self.train(data,y)
 
-    def classify(self,x):
+    def train(self,data,y):
+        featureIndex = max_info_feature(data,y)
+        sum_y = y.sum()
+        #If all labels the same, create leaf
+        if featureIndex == None:
+            self.leaf = True
+            self.label = np.round(sum_y/y.shape[0])
+        #If entropy gain is zero, create leaf
+        elif sum_y == y.shape[0] or sum_y == 0:
+            self.leaf = True
+            self.label = y[0]
+        else:
+            idx_0 = np.where(data[:,featureIndex] == 0)
+            X_0 = data[idx_0]
+            y_0 = y[idx_0]
+            idx_1 = np.where(data[:,featureIndex] == 1)
+            X_1 = data[idx_1]
+            y_1 = y[idx_1]
+            self.featureIndex = featureIndex
+            #ipdb.set_trace()
+            self.left = DecisionTree(X_1,y_1)
+            self.left = DecisionTree(X_0,y_0)
+
+    def classify(self,x,axis=0):
         if not self.leaf:
             if x[self.feature] == True:
                 label = self.left.classify(x)
