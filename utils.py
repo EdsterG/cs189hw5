@@ -27,3 +27,29 @@ def entropy(y):
         p_y_val = float(sum(y == y_val))/y_len
         H -= p_y_val*np.log2(p_y_val)
     return H
+
+class DecisionTree:
+
+    def __init__(self,x,y):
+        #The decision tree will recursively auto train when initialized with data (x,y)
+        self.train(x,y)
+
+        self.left = None
+        self.right = None
+        self.feature = None
+        self.leaf = False
+        self.label = None
+
+    def train(self,x,y):
+        if x:
+            for feature in 
+
+    def classify(self,x):
+        if not self.leaf:
+            if x[self.feature] == True:
+                label = self.left.classify(x)
+            else:
+                label = self.right.classify(x)
+            return label
+        else:
+            return self.label
