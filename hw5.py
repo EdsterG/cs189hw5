@@ -29,6 +29,12 @@ max_info_feature(X,y)
 
 
 
+#XtrainBinary = np.sign(Xtrain)
+
+
+
+#plt.stem(range(len(Ytrain)),Ytrain)
+#plt.show()
 #class DecisionTree(Object):
 #	left = None
-#	right = None
+#	right = None[]
