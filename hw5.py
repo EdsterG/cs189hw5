@@ -20,21 +20,7 @@ X = (X > 0) # convert train/test into matrix of logicals
 Xtest = (Xtest > 0)
 
 # calculate H(X)
-data_entropy = H(y) # ~0.97
-print data_entropy
+#data_entropy = H(y) # ~0.97
+#print data_entropy
 
-max_info_feature(X,y)
-
-
-
-
-
-#XtrainBinary = np.sign(Xtrain)
-
-
-
-#plt.stem(range(len(Ytrain)),Ytrain)
-#plt.show()
-#class DecisionTree(Object):
-#	left = None
-#	right = None[]
+#dt = DecisionTree(X,y)
