@@ -5,7 +5,7 @@ import ipdb
 def max_info_feature(data,y,feature_axis=1): # Assumes binary features
     '''Determine the feature X_j to split which maximizes info gain of dataset
        Info_gain_{X_j} = H(D) - \sum_{X_j=x_j) P(X_j = x_j)*H(D|X_j=x_j)'''
-    H_D = np.zeros(data.shape[feature_axis])
+    H_D_x = np.zeros(data.shape[feature_axis])
     i = 0
     if feature_axis == 1:
         data = data.T # loop through features of matrix
@@ -13,9 +13,9 @@ def max_info_feature(data,y,feature_axis=1): # Assumes binary features
         for b in {0,1}:
             idx_b = np.where(feature == b)
             p_b = float(sum(feature == b))/len(y)
-            H_D[i] -= p_b*H(y[idx_b])
+            H_D_x[i] += p_b*H(y[idx_b])
         i += 1
-    return np.argmax(H_D)
+    return np.argmax(-H_D_x)
 
 H = lambda y : entropy(y)
 def entropy(y):
