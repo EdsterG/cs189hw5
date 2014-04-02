@@ -7,5 +7,9 @@ def test_max_info_feature():
     y = np.array([1,0])
     print X
     print y
+    print H(y)
+    print max_info_feature(X,y,H(y))
 
-    print max_info_feature(X,y)
+
+if __name__ == '__main__':
+    test_max_info_feature()
