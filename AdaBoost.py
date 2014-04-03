@@ -33,20 +33,23 @@ class AdaBoost:
             pred = self.hyps[t].classify(data)
             error = ((pred != y)*self.dWeights).sum()
             self.hWeights[t]=(.5 * np.log((1-error) / error))
-            self.hWeights /= la.norm(self.hWeights, 1)
 
             # update D
             self.dWeights *= np.exp(-self.hWeights[t] * y * pred)
             self.dWeights /= la.norm(self.dWeights, 1)
 
+        #self.hWeights /= la.norm(self.hWeights, 1)
+
 
     def classify(self, data):
-        reslut = np.zeros(data.shape)
+        reslut = np.zeros((data.shape[0],1))
 
         # sum alphas * hypothesis classifications
         for hi in range(len(self.hyps)):
-            reslut += self.hWeights[hi] * self.hyps[hi].classify(data)
+            pred = self.hyps[hi].classify(data)
+            pred = np.ceil(pred-0.5)+np.floor(pred-0.5)
+            reslut += self.hWeights[hi] * pred
         
         # round to take vote
-        return reslut > .5
+        return reslut > 0
 

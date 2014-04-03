@@ -40,11 +40,11 @@ def random_forest(M):
 
 def adaboost():
     print "Initializing/Training AdaBoost"
-    ada = AdaBoost(X,y,DecisionTree,[0,0,0,0])
+    ab = AdaBoost(X,y,DecisionTree,[0,0,0,0])
     print "trained"
 
     print "Classifying training set"
-    pred = ada.classify(X)
+    pred = ab.classify(X)
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
@@ -60,7 +60,7 @@ def cross_validation():
 	#print "Training set error: "+str((pred!=Ytest).sum()/float(y.size))
 
 if __name__ == '__main__':
-    # decision_tree()
-    # crossValidate(X,y,DecisionTree)
+    #decision_tree()
+    #crossValidate(X,y,DecisionTree)
     #random_forest(M=4)
     adaboost()
