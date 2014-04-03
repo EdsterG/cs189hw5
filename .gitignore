@@ -7,3 +7,4 @@
 *.fdb_latexmk
 *.pyc
 readings/
+.DS_Store
