@@ -5,6 +5,7 @@ import scipy.io as sio
 from scipy import linalg as la
 from utils import *
 from RandomForest import RandomForest
+from DecisionTree import DecisionTree
 
 # import dataset
 data = sio.loadmat(open("spam.mat"))
