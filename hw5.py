@@ -5,6 +5,7 @@ from scipy import linalg as la
 from utils import *
 from RandomForest import RandomForest
 from DecisionTree import DecisionTree
+from AdaBoost import AdaBoost
 
 # import dataset
 data = sio.loadmat(open("spam.mat"))
@@ -43,8 +44,18 @@ def random_forest(M):
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
+def adaboost():
+    print "Initializing/Training AdaBoost"
+    ada = AdaBoost(X,y,DecisionTree,[0,0,0,0])
+    print "trained"
+
+    print "Classifying training set"
+    pred = ada.classify(X)
+
+    print "Training set error: "+str((pred!=y).sum()/float(y.size))
+
 if __name__ == '__main__':
     # decision_tree()
     # crossValidate(X,y,DecisionTree)
-    random_forest(M=4)
-
+    #random_forest(M=4)
+    adaboost()
