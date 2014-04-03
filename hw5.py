@@ -21,7 +21,9 @@ y = (y > 0)
 #data_entropy = H(y) # ~0.97
 #print data_entropy
 
+crossValidate(X,y,DecisionTree)
 
+'''
 print "Initilizaing/Training decision tree"
 dt = DecisionTree(X,y)
 print "Finished training"
@@ -29,4 +31,5 @@ print "Finished training"
 print "Classifying training set"
 pred = dt.classify(X)
 
-print "Training set error:"+str((pred!=y).sum()/y.size)
+print "Training set error:"+str((pred!=y).sum()/float(y.size))
+'''

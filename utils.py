@@ -3,6 +3,25 @@ import numpy as np
 from numpy import linalg as la
 import ipdb
 
+import sklearn.cross_validation as cv
+
+def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
+    kf = cv.KFold(X.shape[0], n_folds=num_folds, shuffle=True)
+    totalError = 0.0
+    print "Cross validating..."
+    i=1
+    for train_index, test_index in kf:
+        #print "TRAIN:", train_index, "TEST:", test_index
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+        classifier = Classifier(X_train,y_train)
+        pred = classifier.classify(X_test)
+        error = (pred!=y_test).sum()/float(y.size)
+        print "Iteration %d: %0.3f" % (i,error)
+        totalError += error
+        i+=1
+    print "Total Error: %0.3f" % (totalError/num_folds)
+
 def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     '''Determine the feature X_j to split which maximizes info gain of dataset
        Info_gain_{X_j} = H(D) - \sum_{X_j=x_j) P(X_j = x_j)*H(D|X_j=x_j)'''
@@ -11,6 +30,8 @@ def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     if feature_axis == 1:
         data = data.T # loop through features of matrix
     for feature in data:
+    #for featureIdx in validFeatures:
+    #    feature = data[featureIdx]
         for b in {0,1}:
             idx_b = np.where(feature == b)
             p_b = float(sum(feature == b))/len(y)
