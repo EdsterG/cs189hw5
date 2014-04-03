@@ -33,7 +33,9 @@ class AdaBoost:
             pred = self.hyps[t].classify(data)
             error = ((pred != y)*self.dWeights).sum()
             self.hWeights[t]=(.5 * np.log((1-error) / error))
+
             #self.hWeights /= la.norm(self.hWeights, 1)
+
 
             # update D
             self.dWeights *= np.exp(-self.hWeights[t] * y * pred)
