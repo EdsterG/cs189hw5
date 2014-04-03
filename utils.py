@@ -28,15 +28,12 @@ def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     if feature_axis == 1:
         data = data.T # loop through features of matrix
     for feature in data:
-    #for featureIdx in validFeatures:
-    #    feature = data[featureIdx]
         for b in {0,1}:
             idx_b = np.where(feature == b)
             p_b = float(sum(feature == b))/len(y)
             H_D_x[i] += p_b*H(y[idx_b])
         i += 1
     if max(H_D - H_D_x) == 0:
-        #ipdb.set_trace()
         return None # None of the features give any information gain
     return np.argmax(H_D-H_D_x)
 

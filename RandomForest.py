@@ -1,5 +1,5 @@
-from __future__ import print_function
 from utils import *
+from DecisionTree import DecisionTree
 
 class RandomForest:
 
