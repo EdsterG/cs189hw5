@@ -53,6 +53,7 @@ def entropy(y):
 def nSample(distribution, values, n):
     rand = [random.random() for i in range(n)]
     rand.sort()
+    distribution = distribution.copy()
     samples = []
     samplePos, distPos, cdf = 0, 0, distribution[0]
     while samplePos < n:

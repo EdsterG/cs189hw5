@@ -1,8 +1,11 @@
 from scipy import stats
 from utils import *
+from DecisionTree import DecisionTree
+import warnings
+import ipdb
 
 class AdaBoost:
-    def __init__(self, data, y, Classifier, params):
+    def __init__(self, data, y, Classifier=DecisionTree, params=[0,0,0]):
         # params is list of parameters for given Classifier
         self.Classifier = Classifier
 
@@ -23,7 +26,9 @@ class AdaBoost:
             print "training tree %d" % t
 
             # sample data based on dWeights
+            #print "dweights bef: " + str(self.dWeights) + " sum: " + str(sum(self.dWeights))
             sampleInds = nSample(self.dWeights, range(y.shape[0]), y.shape[0]/4)
+            #print "dweights aft: " + str(self.dWeights) + " sum: " + str(sum(self.dWeights))
             sData = data[sampleInds,:]
             sy = y[sampleInds,:]
 
@@ -32,11 +37,17 @@ class AdaBoost:
             #calculate hypothesis weight
             pred = self.hyps[t].classify(data)
             error = ((pred != y)*self.dWeights).sum()
-            self.hWeights[t]=(.5 * np.log((1-error) / error))
+
+            warnings.simplefilter("error", RuntimeWarning)
+            try:
+                self.hWeights[t]=(.5 * np.log((1-error) / error))
+            except RuntimeWarning:
+                ipdb.set_trace()
+                ipdb.pm()
 
             # update D
             self.dWeights *= np.exp(-self.hWeights[t] * y * pred)
-            self.dWeights /= la.norm(self.dWeights, 1)
+            self.dWeights = self.dWeights / la.norm(self.dWeights, 1)
 
         #self.hWeights /= la.norm(self.hWeights, 1)
 
