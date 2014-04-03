@@ -10,7 +10,7 @@ data = sio.loadmat(open("spam.mat"))
 X = data['Xtrain']
 y = data['ytrain']
 Xtest = data['Xtest']
-
+ipdb.set_trace()
 # print train.shape
 # print target.shape
 # print test.shape
