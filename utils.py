@@ -1,3 +1,4 @@
+from __future__ import division
 import numpy as np
 from numpy import linalg as la
 import ipdb
@@ -16,6 +17,7 @@ def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
             H_D_x[i] += p_b*H(y[idx_b])
         i += 1
     if max(H_D - H_D_x) == 0:
+        #ipdb.set_trace()
         return None # None of the features give any information gain
     return np.argmax(H_D-H_D_x)
 
@@ -31,7 +33,6 @@ def entropy(y):
     return H
 
 class DecisionTree:
-
     def __init__(self,data,y):
         #The decision tree will recursively auto train when initialized with data (x,y)
         self.left = None
@@ -43,7 +44,8 @@ class DecisionTree:
         self.train(data,y)
 
     def train(self,data,y):
-        featureIndex = max_info_feature(data,y)
+        H_y = H(y)
+        featureIndex = max_info_feature(data,y,H_y)
         sum_y = y.sum()
         #If all labels the same, create leaf
         if featureIndex == None:
@@ -61,16 +63,23 @@ class DecisionTree:
             X_1 = data[idx_1]
             y_1 = y[idx_1]
             self.featureIndex = featureIndex
-            #ipdb.set_trace()
             self.left = DecisionTree(X_1,y_1)
-            self.left = DecisionTree(X_0,y_0)
+            self.right = DecisionTree(X_0,y_0)
 
-    def classify(self,x,axis=0):
+    def classify(self,data):
+        y = np.zeros((data.shape[0],1))
+        i = 0
+        for point in data:
+            y[i] = self.getPointLabel(point)
+            i += 1
+        return y
+
+    def getPointLabel(self,point):
         if not self.leaf:
-            if x[self.feature] == True:
-                label = self.left.classify(x)
+            if point[self.featureIndex] == True:
+                label = self.left.getPointLabel(point)
             else:
-                label = self.right.classify(x)
+                label = self.right.getPointLabel(point)
             return label
         else:
             return self.label
