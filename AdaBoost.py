@@ -1,5 +1,4 @@
 from scipy import stats
-from math import log, exp
 from utils import *
 
 class AdaBoost:
@@ -11,40 +10,43 @@ class AdaBoost:
         self.hyps = []
 
         # hWeights : weight given to each hypothesis in vote (alpha)
-        self.hWeights = []
+        self.hWeights = np.zeros((len(params),1))
 
         # dWeights : weights for each data entry (Dt)
-        self.dWeights = np.ones(y.shape) * 1/np.len(y)
+        self.dWeights = np.ones(y.shape) * 1/y.shape[0]
 
         self.train(data, y, params)
 
     def train(self, data, y, params):
         # train each weak learner using Dt
-        for t in range(params):
+        for t in range(len(params)):
+            print "training tree %d" % t
 
             # sample data based on dWeights
-            sampleInds = nSample(self.dWeights, range(y.shape[0]), y.shape[0])
+            sampleInds = nSample(self.dWeights, range(y.shape[0]), y.shape[0]/4)
             sData = data[sampleInds,:]
+            sy = y[sampleInds,:]
 
-            self.hyp[t] = Classifier(sData, y, params[t])
+            self.hyps.append(self.Classifier(sData, sy)) # params[t]
 
             #calculate hypothesis weight
-            pred = self.hyp[t].classify(sData)
-            error = (pred != y).sum() / float(y.size)
-            hWeights[t] = .5 * log((1-error) / error)
+            pred = self.hyps[t].classify(data)
+            error = ((pred != y)*self.dWeights).sum()
+            self.hWeights[t]=(.5 * np.log((1-error) / error))
+            self.hWeights /= la.norm(self.hWeights, 1)
 
             # update D
-            self.dWeights *= exp(-hWeights[t] * y * pred)
+            self.dWeights *= np.exp(-self.hWeights[t] * y * pred)
             self.dWeights /= la.norm(self.dWeights, 1)
 
 
     def classify(self, data):
-        rez = np.zeros(data.shape[0])
+        reslut = np.zeros(data.shape)
 
         # sum alphas * hypothesis classifications
-        for hi in len(self.hyps):
-            rez += self.hWeights[hi] * self.hyps[hi].classify(data)
+        for hi in range(len(self.hyps)):
+            reslut += self.hWeights[hi] * self.hyps[hi].classify(data)
         
         # round to take vote
-        return rez > .5
+        return reslut > .5
 
