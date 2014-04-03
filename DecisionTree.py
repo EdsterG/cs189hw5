@@ -1,6 +1,7 @@
 from utils import *
 
 class DecisionTree:
+
     def __init__(self,data,y):
         #The decision tree will recursively auto train when initialized with data (x,y)
         self.left = None

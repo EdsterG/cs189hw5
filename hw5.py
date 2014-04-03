@@ -8,20 +8,14 @@ from DecisionTree import DecisionTree
 
 # import dataset
 data = sio.loadmat(open("spam.mat"))
-
 X = data['Xtrain']
 y = data['ytrain']
 Xtest = data['Xtest']
-
 
 # binarize features for easy decision tree use
 X = (X > 0) # convert train/test into matrix of logicals
 Xtest = (Xtest > 0)
 y = (y > 0)
-
-#calculate H(X)
-#data_entropy = H(y) # ~0.97
-#print data_entropy
 
 def decision_tree():
     print "Initilizaing/Training decision tree"
@@ -43,8 +37,18 @@ def random_forest(M):
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
+def cross_validation():
+	crossValidate(X,y,DecisionTree)
+	#sliceLocation = 1000
+	#Xtrain = X[:sliceLocation]
+	#Ytrain = y[:sliceLocation]
+	#Xtest = X[sliceLocation:]
+	#Ytest = y[sliceLocation:]
+	#dt = DecisionTree(Xtrain,Ytrain)
+	#pred = dt.classify(Xtest)
+	#print "Training set error: "+str((pred!=Ytest).sum()/float(y.size))
+
 if __name__ == '__main__':
     # decision_tree()
-    # crossValidate(X,y,DecisionTree)
-    random_forest(M=4)
-
+    #random_forest(M=4)
+    cross_validation()
