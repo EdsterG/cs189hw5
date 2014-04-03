@@ -1,3 +1,4 @@
+from __future__ import print_function
 from utils import *
 
 class RandomForest:
@@ -6,18 +7,25 @@ class RandomForest:
         self.trees = []
         self.X = X
         self.y = y
+        self.M = M
         self.randPoints = np.array([])
         self.randFeatures = np.array([])
 
-    def train(self):
-        self.randPoints = np.random.randint(X.shape[0],size=np.random.randint(1,X.shape[0]))
-        self.randFeatures = np.random.randint(X.shape[1],size=np.random.randint(1,X.shape[1]))
-        self.trees = [DecisionTree(X[randPoints[i],:][:,randFeatures[i]],y[randPoints[i]]) for i in range(M)]
+        self.train(X,y)
+
+    def train(self,X,y):
+        self.randPoints = [np.random.randint(X.shape[0],size=np.random.randint(1,X.shape[0])) for _ in range(self.M)]
+        self.randFeatures = [np.random.randint(X.shape[1],size=np.random.randint(1,X.shape[1])) for _ in range(self.M)]
+        self.trees = [print(i) or DecisionTree(X[self.randPoints[i],:][:,self.randFeatures[i]],y[self.randPoints[i]]) for i in range(self.M)]
 
     def classify(self,Xtest):
-        predictions = np.zeros(Xtest.shape[0])
+        predictions = np.zeros((Xtest.shape[0],self.M))
         i = 0
         for tree in self.trees:
-            predictions[i] = tree.classify(Xtest[randPoints[i],:][:,randFeatures[i]])
-        prediction = np.round(np.mean(predictions))
-        return predicition
+            pred = tree.classify(Xtest[:,self.randFeatures[i]])
+            pred.shape = (pred.shape[0],)
+            predictions[:,i] = pred
+            i+=1
+        prediction = np.round(np.mean(predictions,axis=1))
+        prediction.shape = (prediction.shape[0],1)
+        return prediction
