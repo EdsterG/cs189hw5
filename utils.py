@@ -50,3 +50,18 @@ def entropy(y):
         p_y_val = float(sum(y == y_val))/y_len
         H -= p_y_val*np.log2(p_y_val)
     return H
+
+# stolen from 188
+def nSample(distribution, values, n):
+    rand = [random.random() for i in range(n)]
+    rand.sort()
+    samples = []
+    samplePos, distPos, cdf = 0, 0, distribution[0]
+    while samplePos < n:
+        if rand[samplePos] < cdf:
+            samplePos += 1
+            samples.append(values[distPos])
+        else:
+            distPos += 1
+            cdf += distribution[distPos]
+    return samples
