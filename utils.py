@@ -2,6 +2,7 @@ import numpy as np
 from numpy import linalg as la
 import ipdb
 import sklearn.cross_validation as cv
+import random
 
 def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
     kf = cv.KFold(X.shape[0], n_folds=num_folds, shuffle=True)
