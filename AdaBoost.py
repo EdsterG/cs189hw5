@@ -26,9 +26,7 @@ class AdaBoost:
             print "training tree %d" % t
 
             # sample data based on dWeights
-            #print "dweights bef: " + str(self.dWeights) + " sum: " + str(sum(self.dWeights))
             sampleInds = nSample(self.dWeights, range(y.shape[0]), y.shape[0]/4)
-            #print "dweights aft: " + str(self.dWeights) + " sum: " + str(sum(self.dWeights))
             sData = data[sampleInds,:]
             sy = y[sampleInds,:]
 
