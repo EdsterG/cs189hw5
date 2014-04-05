@@ -6,6 +6,7 @@ from utils import *
 from RandomForest import RandomForest
 from DecisionTree import DecisionTree
 from AdaBoost import AdaBoost
+import pickle
 
 # import dataset
 data = sio.loadmat(open("spam.mat"))
@@ -38,6 +39,11 @@ def random_forest(M):
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
+    y_hat = rf.classify(Xtest)
+    np.save('y_hat.npy', y_hat)
+    with open('randomForest.txt', 'wb') as output:
+        pickle.dump(rf, output, pickle.HIGHEST_PROTOCOL)
+
 def adaboost():
     print "Initializing/Training AdaBoost"
     ab = AdaBoost(X,y)
@@ -62,6 +68,6 @@ def cross_validation():
 if __name__ == '__main__':
     #decision_tree()
     #crossValidate(X,y,DecisionTree)
-    #random_forest(M=4)
+    random_forest(M=1000)
     #adaboost()
-    crossValidate(X,y,AdaBoost)
+    # crossValidate(X,y,AdaBoost)
