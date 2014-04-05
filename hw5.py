@@ -54,6 +54,12 @@ def adaboost():
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
+def kaggleSubmission(Classifier):
+    classifier = Classifier(X,y)
+    result = classifier.classify(Xtest)
+    csvFile = np.concatenate(([['Id','Category']],result))
+    np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
+
 def cross_validation():
 	crossValidate(X,y,DecisionTree)
 	#sliceLocation = 1000
