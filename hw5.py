@@ -6,6 +6,7 @@ from utils import *
 from RandomForest import RandomForest
 from DecisionTree import DecisionTree
 from AdaBoost import AdaBoost
+import pickle
 
 # import dataset
 data = sio.loadmat(open("spam.mat"))
@@ -28,7 +29,7 @@ def decision_tree():
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
-def random_forest(M):
+def random_forest(M,kaggle=False):
     print "Initializing/Training Random Forest"
     rf = RandomForest(X,y,M)
     print "Traning Complete"
@@ -37,6 +38,12 @@ def random_forest(M):
     pred = rf.classify(X)
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
+
+    y_hat = rf.classify(Xtest)
+    if kaggle:
+        np.save('y_hat.npy', y_hat)
+        with open('randomForest.txt', 'wb') as output:
+            pickle.dump(rf, output, pickle.HIGHEST_PROTOCOL)
 
 def adaboost():
     print "Initializing/Training AdaBoost"
@@ -48,15 +55,15 @@ def adaboost():
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
-def kaggleSubmission(Classifier):
-    classifier = Classifier(X,y)
-    result = classifier.classify(Xtest)
+def kaggleSubmission(result):
+    #classifier = Classifier(X,y)
+    #result = classifier.classify(Xtest)
     temp = np.concatenate((np.concatenate(np.arange(result.shape[0]),result)),axis=1)
     csvFile = np.concatenate(([['Id','Category']],temp))
     np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
 
 def cross_validation():
-	crossValidate(X,y,DecisionTree)
+	crossValidate(X,y,RandomForest)
 	#sliceLocation = 1000
 	#Xtrain = X[:sliceLocation]
 	#Ytrain = y[:sliceLocation]
@@ -67,8 +74,10 @@ def cross_validation():
 	#print "Training set error: "+str((pred!=Ytest).sum()/float(y.size))
 
 if __name__ == '__main__':
-    decision_tree()
+    "Main Method"
+    # decision_tree()
     #crossValidate(X,y,DecisionTree)
-    #random_forest(M=4)
+    random_forest(M=1000,kaggle=True)
+    # crossValidate(X,y,RandomForest)
     #adaboost()
     #crossValidate(X,y,AdaBoost)
