@@ -62,8 +62,14 @@ def kaggleSubmission(result):
     #result = classifier.classify(Xtest)
     idRange = np.arange(result.shape[0]).reshape(result.shape)
     temp = np.concatenate((idRange,result),axis=1)
+    temp = temp.astype(int)
     csvFile = np.concatenate(([['Id','Category']],temp))
     np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
+
+# with open('randomForest.txt','rb') as input:
+#     rf = pickle.load(input)
+
+
 
 def cross_validation():
 	crossValidate(X,y,RandomForest)
