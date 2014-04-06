@@ -16,8 +16,13 @@ class RandomForest:
 
     def train(self,X,y):
         self.randPoints = [np.random.randint(X.shape[0],size=np.random.randint(1,X.shape[0])) for _ in range(self.M)]
-        self.randFeatures = [np.random.choice(np.r_[:X.shape[1]],size=np.random.randint(1,X.shape[1]),replace=False) for _ in range(self.M)]
-        for featureSet in self.randFeatures:
+        # self.randFeatures = [np.random.choice(np.r_[:X.shape[1]],size=np.random.randint(1,X.shape[1]),replace=False) for _ in range(self.M)]
+        self.randFeatures = [[0] for _ in range(self.M)]
+        for i in range(self.M):
+            points = self.randPoints[i]
+            featureSet = self.randFeatures[i]
+            print("num points: ", len(points))
+            print("num features: ", len(featureSet))
             if not (len(featureSet) == len(np.unique(featureSet))):
                 print("Sampling features with replacement for some reason")
         self.trees = [print(i) or DecisionTree(X[self.randPoints[i],:][:,self.randFeatures[i]],y[self.randPoints[i]]) for i in range(self.M)]

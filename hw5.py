@@ -87,9 +87,10 @@ if __name__ == '__main__':
     #decision_tree()
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
-    result = np.load('y_hat.npy');
-    kaggleSubmission(result)
-    # crossValidate(X,y,RandomForest)
+    # result = np.load('y_hat.npy');
+    # kaggleSubmission(result)
+    X[:,0] = np.ones(len(X[:,1]))
+    crossValidate(X,y,RandomForest)
     #adaboost()
     #crossValidate(X,y,AdaBoost)
 
