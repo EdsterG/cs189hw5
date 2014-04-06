@@ -60,7 +60,7 @@ def adaboost():
 def kaggleSubmission(result):
     #classifier = Classifier(X,y)
     #result = classifier.classify(Xtest)
-    idRange = np.arange(result.shape[0]).reshape(result.shape)
+    idRange = np.arange(1,result.shape[0]+1).reshape(result.shape)
     temp = np.concatenate((idRange,result),axis=1)
     temp = temp.astype(int)
     csvFile = np.concatenate(([['Id','Category']],temp))
