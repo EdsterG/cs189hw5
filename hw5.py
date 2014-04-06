@@ -78,7 +78,7 @@ def cross_validation():
 
 if __name__ == '__main__':
     "Main Method"
-    decision_tree()
+    #decision_tree()
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
     result = np.load('y_hat.npy');
