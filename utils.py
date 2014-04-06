@@ -13,13 +13,16 @@ def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
         #print "TRAIN:", train_index, "TEST:", test_index
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        classifier = Classifier(X_train,y_train,M=50)
+        classifier = Classifier(X_train,y_train,M=1)
         pred = classifier.classify(X_test)
         error = (pred!=y_test).sum()/float(y.size)
         print "Iteration %d: %0.3f" % (i,error)
         totalError += error
         i+=1
     print "Total Error: %0.3f" % (totalError/num_folds)
+
+
+
 
 def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     '''Determine the feature X_j to split which maximizes info gain of dataset
@@ -38,6 +41,8 @@ def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
         return None # None of the features give any information gain
     return np.argmax(H_D-H_D_x)
 
+
+
 H = lambda y : entropy(y)
 def entropy(y):
     '''Calculate the entropy in a dataset with class output y'''
@@ -48,6 +53,9 @@ def entropy(y):
         p_y_val = float(sum(y == y_val))/y_len
         H -= p_y_val*np.log2(p_y_val)
     return H
+
+
+
 
 # stolen from 188
 def nSample(distribution, values, n):
