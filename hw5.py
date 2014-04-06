@@ -29,6 +29,8 @@ def decision_tree():
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
 
+    kaggleSubmission(pred)
+
 def random_forest(M,kaggle=False):
     print "Initializing/Training Random Forest"
     rf = RandomForest(X,y,M)
@@ -58,7 +60,8 @@ def adaboost():
 def kaggleSubmission(result):
     #classifier = Classifier(X,y)
     #result = classifier.classify(Xtest)
-    temp = np.concatenate((np.concatenate(np.arange(result.shape[0]),result)),axis=1)
+    idRange = np.arange(result.shape[0]).reshape(result.shape)
+    temp = np.concatenate((idRange,result),axis=1)
     csvFile = np.concatenate(([['Id','Category']],temp))
     np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
 
@@ -75,7 +78,7 @@ def cross_validation():
 
 if __name__ == '__main__':
     "Main Method"
-    # decision_tree()
+    decision_tree()
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
     result = np.load('y_hat.npy');
@@ -83,3 +86,4 @@ if __name__ == '__main__':
     # crossValidate(X,y,RandomForest)
     #adaboost()
     #crossValidate(X,y,AdaBoost)
+
