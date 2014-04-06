@@ -13,7 +13,7 @@ def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
         #print "TRAIN:", train_index, "TEST:", test_index
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        classifier = Classifier(X_train,y_train)
+        classifier = Classifier(X_train,y_train,M=50)
         pred = classifier.classify(X_test)
         error = (pred!=y_test).sum()/float(y.size)
         print "Iteration %d: %0.3f" % (i,error)

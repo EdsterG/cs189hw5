@@ -58,11 +58,12 @@ def adaboost():
 def kaggleSubmission(result):
     # classifier = Classifier(X,y)
     # result = classifier.classify(Xtest)
+    formatted_result = np.concatenate(np.r_[:result.size],result,axis=1)
     csvFile = np.concatenate(([['Id','Category']],result))
     np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
 
 def cross_validation():
-	crossValidate(X,y,DecisionTree)
+	crossValidate(X,y,RandomForest)
 	#sliceLocation = 1000
 	#Xtrain = X[:sliceLocation]
 	#Ytrain = y[:sliceLocation]
@@ -73,8 +74,10 @@ def cross_validation():
 	#print "Training set error: "+str((pred!=Ytest).sum()/float(y.size))
 
 if __name__ == '__main__':
-    #decision_tree()
+    "Main Method"
+    # decision_tree()
     #crossValidate(X,y,DecisionTree)
     random_forest(M=1000,kaggle=True)
+    # crossValidate(X,y,RandomForest)
     #adaboost()
     # crossValidate(X,y,AdaBoost)
