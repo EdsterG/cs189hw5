@@ -66,17 +66,37 @@
 % -------------------- PROBLEM 1 --------------------
 {\Large 1. \indent Implementation and Features}
 \\
-\begin{enumerate}[(i)]
+\begin{enumerate}[(1)]
 
 % 1 (a)
 \item Decision Tree
 \begin{enumerate}[(a)]
-\item The naive implementation with no pruning and no depth limiting.
+\item A robust implementation with multiple options avaliable.
+\begin{enumerate}[(i)]
+\item Allows for depth limiting.
+\item Allows the use of different impurity metrics, the following are implemented:
+\begin{enumerate}[-]
+\item Entropy impurity
+\item Gini impurity
+\item Misclassification impurity
 \end{enumerate}
+\item Allows the user to explicitly pass in a subset of feature used for training.
+\item Has functions to make bagging and random forests easier to implement.
+\end{enumerate}
+\end{enumerate}
+
 
 \item Random Forest
 \begin{enumerate}[(a)]
-\item Trains M different trees. Each tree is constructed with a random number of points and a random number of features.
+\item Builds on the decision tree implementation, and trains M different decision trees.
+\begin{enumerate}[(i)]
+\item Can build a forest based on the bagging model where each tree is trained on a random subset of the original data.
+\item Can build a forest where each tree is built on a random subset of the features.
+\begin{enumerate}[-]
+\item Can be expanded to split at each node based on a random subset of the features.
+\item Can also be mixed with the bagging model do decorrelate the tree's even more.
+\end{enumerate}
+\end{enumerate}
 \end{enumerate}
 
 \item AdaBoost
@@ -91,7 +111,12 @@
 \\
 
 \begin{enumerate}[(i)]
-\item
+\item 10-fold cross validation for decision trees was around 9.3\% error.
+\item 10-fold cross validation for random forests is in the range of 6.2\%6.8\% error.
+\begin{enumerate}[-]
+\item Surprisingly, splitting on 17 randomly chosen features was better than any other value. 
+\end{enumerate}
+\item 10-fold cross validation for adaboost (4 itterations) is around 12.4\%
 \end{enumerate}
 
 \end{document}
