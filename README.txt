@@ -12,7 +12,7 @@ The following libraries where used:
 	numpy - Used for all array/matrix computations
 	pylab - Used for plotting
 	scipy - Used to load the matlab files into python
-	sklearn - Used for the cross validation function
+	sklearn - Used for part of our cross validation function
 	ipdb - Used for debugging
 
 Our classifiers auto train on initializations.
