@@ -1,11 +1,11 @@
 from scipy import stats
 from utils import *
-from DecisionTree import DecisionTree
+from DecisionTree import *
 import warnings
 import ipdb
 
 class AdaBoost:
-    def __init__(self, data, y, Classifier=DecisionTree, params=[0,0,0]):
+    def __init__(self, data, y, Classifier=DecisionTree2, params=[0,0,0]):
         # params is list of parameters for given Classifier
         self.Classifier = Classifier
 
@@ -52,12 +52,12 @@ class AdaBoost:
 
 
     def classify(self, data):
-        reslut = np.zeros(data.shape)
+        result = np.zeros((data.shape[0],1))
 
         # sum alphas * hypothesis classifications
         for hi in range(len(self.hyps)):
-            reslut += self.hWeights[hi] * self.hyps[hi].classify(data)
+            result += self.hWeights[hi] * self.hyps[hi].classify(data)
         
         # round to take vote
-        return reslut > .5
+        return result > .5
 

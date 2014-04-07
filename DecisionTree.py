@@ -111,8 +111,9 @@ class Node:
         self.labels = labels
 
         if self.tree.sampleFeatures == True:
-            #sampleSize = np.random.randint(1,data.shape[1])
-            sampleSize = int(np.log2(data.shape[1]))+1
+            #sampleSize = np.random.randint(1,data.shape[1]) #This is not that great
+            #sampleSize = int(np.log2(data.shape[1]))+1 #This is reasonable
+            sampleSize = 17 # Cross validation shows this to be the best number
             featuresToUse = np.random.choice(self.tree.validFeatures,size=sampleSize,replace=False)
         else:
             featuresToUse = self.tree.validFeatures

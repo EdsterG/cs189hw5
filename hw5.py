@@ -95,7 +95,7 @@ if __name__ == '__main__':
     "Main Method"
     #decision_tree2()
     #random_forest2()
-    crossValidate(X,y,RandomForest2,num_folds=5,M=1)
+    #crossValidate(X,y,RandomForest2,num_folds=10,M=100)
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
     # result = np.load('y_hat.npy');
@@ -104,6 +104,6 @@ if __name__ == '__main__':
 
     #X[:,0] = np.ones(len(X[:,1]))
     #crossValidate(X,y,RandomForest)
-    #adaboost()
+    adaboost()
     #crossValidate(X,y,AdaBoost)
 

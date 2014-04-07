@@ -31,7 +31,9 @@ def crossValidate(X,y,Classifier,num_folds=10,**kwargs):
         print "Iteration %d: %0.3f" % (i,error)
         totalError += error
         i+=1
-    print "Total Error: %0.3f" % (totalError/num_folds)
+    avgError = totalError/num_folds
+    print "Total Error: %0.3f" % avgError
+    return avgError
 
 def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     '''Determine the feature X_j to split which maximizes info gain of dataset
