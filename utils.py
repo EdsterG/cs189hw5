@@ -13,16 +13,13 @@ def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
         #print "TRAIN:", train_index, "TEST:", test_index
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        classifier = Classifier(X_train,y_train,M=1)
+        classifier = Classifier(X_train,y_train)
         pred = classifier.classify(X_test)
-        error = (pred!=y_test).sum()/float(y.size)
+        error = (pred!=y_test).sum()/float(y_test.size)
         print "Iteration %d: %0.3f" % (i,error)
         totalError += error
         i+=1
     print "Total Error: %0.3f" % (totalError/num_folds)
-
-
-
 
 def max_info_feature(data,y,H_D,feature_axis=1): # Assumes binary features
     '''Determine the feature X_j to split which maximizes info gain of dataset
@@ -50,14 +47,35 @@ def entropy(y):
     y_vals = np.unique(y)
     y_len = len(y)
     for y_val in y_vals:
-        p_y_val = float(sum(y == y_val))/y_len
+        p_y_val = float((y == y_val).sum())/y_len
         H -= p_y_val*np.log2(p_y_val)
     return H
 
+infoImpurity = lambda y : entropy(y)
+
+def giniImpurity(y):
+    impurity = 1
+    y_vals = np.unique(y)
+    y_len = len(y)
+    for y_val in y_vals:
+        p_y_val = float((y == y_val).sum())/y_len
+        impurity -= p_y_val**2
+    return impurity
+
+def misclassificationImpurity(y):
+    if y.size==0:
+        return 0
+    y_vals = np.unique(y)
+    p_y_val = np.zeros(y_vals.size)
+    y_len = len(y)
+    i = 0
+    for y_val in y_vals:
+        p_y_val[i] = float((y == y_val).sum())/y_len
+        i+=1
+    return 1-max(p_y_val)
 
 
-
-# stolen from 188
+# borrowed from 188
 def nSample(distribution, values, n):
     rand = [random.random() for i in range(n)]
     rand.sort()

@@ -18,13 +18,3 @@ The following libraries where used:
 Our classifiers auto train on initializations.
 To classify a dataset, just call the Classifier.classify() function.
 Refer to hw5.py for examples on how to run each classifier.
-
-Desciption of each classifier:
-	Decision Tree:
-		The naive implementation with no pruning and no depth limiting.
-
-	Random Forest:
-		Trains M different trees. Each tree is constructed with a random number of points and a random number of features.
-
-	AdaBoost:
-		Instead of rewriting each classifier to account for weights, we just sample the dataset using the weighted distribution.

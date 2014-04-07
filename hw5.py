@@ -3,8 +3,8 @@ import pylab as plt
 import scipy.io as sio
 from scipy import linalg as la
 from utils import *
-from RandomForest import RandomForest
-from DecisionTree import DecisionTree
+from RandomForest import *
+from DecisionTree import *
 from AdaBoost import AdaBoost
 import pickle
 
@@ -28,8 +28,6 @@ def decision_tree():
     pred = dt.classify(X)
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
-
-    kaggleSubmission(pred)
 
 def random_forest(M,kaggle=False):
     print "Initializing/Training Random Forest"
@@ -82,15 +80,38 @@ def cross_validation():
 	#pred = dt.classify(Xtest)
 	#print "Training set error: "+str((pred!=Ytest).sum()/float(y.size))
 
+def decision_tree2():
+    print "Initilizaing/Training decision tree"
+    dt = DecisionTree2(X,y,sampleFeatures=True,sampleData=True)
+    print "Traning Complete"
+
+    print "Classifying training set"
+    pred = dt.classify(X)
+
+    print "Training set error: "+str((pred!=y).sum()/float(y.size))
+
+def random_forest2():
+    print "Initilizaing/Training decision tree"
+    rf = RandomForest2(X,y,M=100)
+    print "Traning Complete"
+
+    print "Classifying training set"
+    pred = rf.classify(X)
+
+    print "Training set error: "+str((pred!=y).sum()/float(y.size))
+
 if __name__ == '__main__':
     "Main Method"
-    #decision_tree()
+    #decision_tree2()
+    random_forest2()
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
     # result = np.load('y_hat.npy');
     # kaggleSubmission(result)
-    X[:,0] = np.ones(len(X[:,1]))
-    crossValidate(X,y,RandomForest)
+    
+
+    #X[:,0] = np.ones(len(X[:,1]))
+    #crossValidate(X,y,RandomForest)
     #adaboost()
     #crossValidate(X,y,AdaBoost)
 

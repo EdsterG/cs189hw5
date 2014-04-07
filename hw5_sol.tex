@@ -49,11 +49,11 @@
 \normalfont \normalsize 
 %\textsc{Arbitrary Labs} \\ [5pt]
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge CS 189 HW 4 \\ % The assignment title
+\huge CS 189 HW 5 \\ % The assignment title
 \horrule{2pt} \\[-0.1cm] % Thick bottom horizontal rule
 }
 
-\author{Eddie Groshev, Rishi Sharma}
+\author{Eddie Groshev, Rishi Sharma, Connor Braa}
 
 \begin{document}
 	
@@ -64,107 +64,34 @@
 %----------------------------------------------------------------------------------------
 
 % -------------------- PROBLEM 1 --------------------
-{\Large 1. Logistic Regression with Newton's Method \indent }
+{\Large 1. \indent Implementation and Features}
 \\
 \begin{enumerate}[(i)]
 
 % 1 (a)
-\item
-\begin{align*}
-l(\beta) &=  \lambda\|\beta\|^2_2 -\sum_{i=1}^n \left[y_i\log\mu_i + (1-y_i)\log(1-\mu_i)\right]\\
-\mu_i &= \frac{1}{1+\exp{(-\beta^Tx_i)}}\\
-\mu &= \frac{1}{1+\exp{(-\beta^TX^T)}}=\begin{bmatrix}\mu_1\\\mu_2\\\mu_3\\\mu_4\end{bmatrix}\\
-\nabla_\beta \mu &= \frac{-1}{(1+\exp{(-\beta^TX^T)})^2}\nabla_\beta exp{(-\beta^TX^T)}=X^TDiag(\mu)(1-\mu)\\
-\nabla_\beta l(\beta) &= 2\lambda\beta - \sum_{i=1}^n[y_i(1-\mu_i)x_i+(1-y_i)(-\mu_i)x_i] = \boxed{2\lambda\beta - X^T(Y-\mu)}
-\end{align*}
-
-\item
-\begin{align*}
-\nabla_\beta^2l(\beta) = 2\lambda I + \sum_{i=1}^n \mu_i(x_ix_i^T)(1-\mu_i) &= \boxed{2\lambda I + X^TDiag(\mu)(I-Diag(\mu))X}
-\end{align*}
-
-\item
-\begin{align*}
-\beta_{t+1} &= \beta_{t} - \eta\nabla_\beta^2l(\beta)^{-1}\nabla_\beta l(\beta)\\
-\beta_{t+1} &= \boxed{\beta_{t} - \eta(2\lambda I + X^TDiag(\mu_i(1-\mu_i))X)^{-1}(2\lambda\beta - X^T(Y-\mu))}
-\end{align*}
-
-\item
+\item Decision Tree
 \begin{enumerate}[(a)]
-\item
-\begin{align*}
-\mu^{(0)} = [0.9526\ \ \ 0.7311\ \ \ 0.7311\ \ \ 0.2689]^T
-\end{align*}
-\item
-\begin{align*}
-\beta^{(1)} = [-0.3868\ \ \ 1.4043\ \ \ -2.2842]^T
-\end{align*}
-\item
-\begin{align*}
-\mu^{(1)} = [0.8731\ \ \ 0.8238\ \ \ 0.2932\ \ \ 0.2198]^T
-\end{align*}
-\item
-\begin{align*}
-\beta^{(2)} = [-0.5122\ \ \ 1.4594\ \ \ -2.1627]^T
-\end{align*}
+\item The naive implementation with no pruning and no depth limiting.
+\end{enumerate}
+
+\item Random Forest
+\begin{enumerate}[(a)]
+\item Trains M different trees. Each tree is constructed with a random number of points and a random number of features.
+\end{enumerate}
+
+\item AdaBoost
+\begin{enumerate}[(a)]
+\item Instead of rewriting each classifier to account for weights, we just sample the dataset using the weighted distribution.
 \end{enumerate}
 
 \end{enumerate}
 
 \newpage % -------------------- PROBLEM 2 --------------------
- {\Large 2. \indent Spam classification using Logistic Regression}
+ {\Large 2. \indent Results and Analysis}
 \\
 
 \begin{enumerate}[(i)]
-
 \item
-The batch gradient decent equations are the same ones derived in the previous question.
-\begin{align*}
-\beta_{n+1} = \beta_n - \eta(2\lambda\beta_n - X^T(Y-\mu_n))
-\end{align*}
-Regularization parameter $\lambda = 1$
-\begin{enumerate}[(a)]
-\item
-%\begin{center} \includegraphics[scale=0.5]{bNLLi} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{bNLLii} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{bNLLiii} \end{center}
-
-\end{enumerate}
-
-\item
-\begin{align*}
-\beta_{n+1} = \beta_n - \eta(2\lambda\beta_n - (y_i-\mu_n)x_i) \text{\ \ \ for\ \ } i=1,...,n
-\end{align*}
-\begin{enumerate}[(a)]
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLi} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLii} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLiii} \end{center}
-
-The plots from part i look smooth, but the plots in part 2 look jagged. This is because the beta is updated with respect to one data point at a time. Some data points may point the gradient in the wrong direction while others will bring it back in the correct direction. The average direction will be descending that's why we eventually converge to a minimum. The jaggedness can be explained by the greater "randomness" of stochastic gradient descent, which should not be suprising given its name.
-\end{enumerate}
-
-\item
-\begin{enumerate}[(a)]
-Now the learning rate is propotional to 1/t.
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLiDecreasing} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLiiDecreasing} \end{center}
-\item
-%\begin{center} \includegraphics[scale=0.5]{sNLLiiiDecreasing} \end{center}
-
-This strategy is much better than having a constant learning rate. We could also compute the similarity of the current gradient with the previous one, and if the current one points in an opposite direction then we could discard it and continue.
-
-\end{enumerate}
-
-\item
-We cross validated over $\lambda$ using a log scale range. We found from the first homework that it is often useful to step over a log range. We considered cross validating over the learning rate simultaneously, but we decided against it as we were seeing pretty good results with the $\lambda$ that was found. We settled on a value that we felt pretty good about and submitted to Kaggle for some fairely good results.
-
 \end{enumerate}
 
 \end{document}
