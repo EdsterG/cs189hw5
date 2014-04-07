@@ -4,7 +4,19 @@ import ipdb
 import sklearn.cross_validation as cv
 import random
 
-def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
+def kaggleSubmission(result,suffix=None):
+    idRange = np.arange(1,result.shape[0]+1).reshape(result.shape)
+    temp = np.concatenate((idRange,result),axis=1)
+    temp = temp.astype(int)
+    csvFile = np.concatenate(([['Id','Category']],temp))
+    if suffix:
+        fileName = 'testResults'+suffix+'.csv'
+    else:
+        fileName = 'testResults.csv'
+    np.savetxt(fileName, csvFile, delimiter=",",fmt="%s")
+
+# Borrowed and modified sample code from sklearn cv example page
+def crossValidate(X,y,Classifier,num_folds=10,**kwargs):
     kf = cv.KFold(X.shape[0], n_folds=num_folds, shuffle=True)
     totalError = 0.0
     print "Cross validating..."
@@ -13,7 +25,7 @@ def crossValidate(X,y,Classifier,num_folds=10,hyperParameters=None):
         #print "TRAIN:", train_index, "TEST:", test_index
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        classifier = Classifier(X_train,y_train)
+        classifier = Classifier(X_train,y_train,**kwargs)
         pred = classifier.classify(X_test)
         error = (pred!=y_test).sum()/float(y_test.size)
         print "Iteration %d: %0.3f" % (i,error)

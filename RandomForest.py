@@ -48,13 +48,14 @@ class RandomForest2:
         self.train(X,y)
 
     def train(self,X,y):
-        self.trees = [print(i) or DecisionTree2(X,y,sampleFeatures=True,sampleData=True) for i in range(self.M)]
+        #self.trees = [print(i) or DecisionTree2(X,y,sampleFeatures=True,sampleData=True) for i in range(self.M)]
+        self.trees = [DecisionTree2(X,y,sampleFeatures=True,sampleData=True) for i in range(self.M)]
 
     def classify(self,data):
         predictions = np.zeros((data.shape[0],self.M))
         i = 0
         for tree in self.trees:
-            print(i)
+            #print(i)
             pred = tree.classify(data)
             pred.shape = (pred.shape[0],)
             predictions[:,i] = pred

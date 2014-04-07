@@ -72,7 +72,7 @@ class DecisionTree2:
 
         if self.sampleData == True:
             #sampleSize = np.random.randint(1,data.shape[0])
-            sampleSize = data.shape[0]
+            sampleSize = data.shape[0]*0.8
             dataIndices = np.random.randint(data.shape[0],size=sampleSize)
         else:
             dataIndices = np.arange(data.shape[0])
@@ -93,8 +93,6 @@ class DecisionTree2:
 
 class Node:
     def __init__(self,data,labels,parent,tree,depth):
-        self.data = data
-        self.labels = labels
         self.tree = tree
         self.parent = parent
         self.depth = depth
@@ -109,6 +107,9 @@ class Node:
         self.train(data,labels)
 
     def train(self,data,labels):
+        self.data = data
+        self.labels = labels
+
         if self.tree.sampleFeatures == True:
             #sampleSize = np.random.randint(1,data.shape[1])
             sampleSize = int(np.log2(data.shape[1]))+1
@@ -118,19 +119,19 @@ class Node:
 
         # If max depth was reached, stop splitting
         if self.tree.maxDepth and self.depth == self.tree.maxDepth:
-            self.label = np.round(self.labels.sum()/self.labels.shape[0])
+            self.label = np.round(labels.sum()/labels.shape[0])
             return
 
         numPosLabels = labels.sum()
         # If all labels the same stop splitting
         if numPosLabels == labels.shape[0] or numPosLabels == 0:
-            self.label = np.round(self.labels.sum()/self.labels.shape[0])
+            self.label = np.round(numPosLabels/labels.shape[0])
             return
 
         featureIndex = self.minImpurityFeature(data,labels,featuresToUse)
         # If entropy gain is zero stop splitting
         if featureIndex == None:
-            self.label = np.round(self.labels.sum()/self.labels.shape[0])
+            self.label = np.round(numPosLabels/labels.shape[0])
             return
 
         idx_1 = np.where(data[:,featureIndex] == 1)
@@ -156,8 +157,9 @@ class Node:
         for feature in data[validFeatures,:]:
             #featureIndex = validFeatures[i]
             for val in {0,1}:
-                idx_val = np.where(feature == val)
-                p_val = float((feature == val).sum())/labels.size
+                featureMatches = (feature == val)
+                idx_val = np.where(featureMatches)
+                p_val = float(featureMatches.sum())/labels.size
                 impurityOfFeature[i] += p_val*self.tree.impurityMeasure(labels[idx_val])
             i += 1
         impurityRemoved = currImpurity-impurityOfFeature

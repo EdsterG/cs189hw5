@@ -45,6 +45,9 @@ def random_forest(M,kaggle=False):
         with open('randomForest.txt', 'wb') as output:
             pickle.dump(rf, output, pickle.HIGHEST_PROTOCOL)
 
+# with open('randomForest.txt','rb') as input:
+#     rf = pickle.load(input)
+
 def adaboost():
     print "Initializing/Training AdaBoost"
     ab = AdaBoost(X,y)
@@ -54,18 +57,6 @@ def adaboost():
     pred = ab.classify(X)
 
     print "Training set error: "+str((pred!=y).sum()/float(y.size))
-
-def kaggleSubmission(result):
-    #classifier = Classifier(X,y)
-    #result = classifier.classify(Xtest)
-    idRange = np.arange(1,result.shape[0]+1).reshape(result.shape)
-    temp = np.concatenate((idRange,result),axis=1)
-    temp = temp.astype(int)
-    csvFile = np.concatenate(([['Id','Category']],temp))
-    np.savetxt("testResults.csv", csvFile, delimiter=",",fmt="%s")
-
-# with open('randomForest.txt','rb') as input:
-#     rf = pickle.load(input)
 
 
 
@@ -103,7 +94,8 @@ def random_forest2():
 if __name__ == '__main__':
     "Main Method"
     #decision_tree2()
-    random_forest2()
+    #random_forest2()
+    crossValidate(X,y,RandomForest2,num_folds=5,M=1)
     #crossValidate(X,y,DecisionTree)
     # random_forest(M=1000,kaggle=True)
     # result = np.load('y_hat.npy');
