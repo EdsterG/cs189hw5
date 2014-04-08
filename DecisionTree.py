@@ -1,5 +1,8 @@
 from utils import *
 
+from sklearn.cross_validation import train_test_split
+# only used for experimental pruning
+
 class DecisionTree:
 
     def __init__(self,data,labels,features=None,depth=None):
@@ -70,7 +73,7 @@ class DecisionTree2:
         else:
             self.validFeatures = validFeatures
 
-        if self.sampleData == True:
+        if self.sampleData:
             #sampleSize = np.random.randint(1,data.shape[0])
             sampleSize = data.shape[0]*0.8
             dataIndices = np.random.randint(data.shape[0],size=sampleSize)
@@ -78,9 +81,18 @@ class DecisionTree2:
             dataIndices = np.arange(data.shape[0])
         data = data[dataIndices,:]
         labels = labels[dataIndices]
-        self.root = Node(data,labels,None,self,1)
 
-        #After the full tree is built it can be pruned up from the leaves.
+        if not self.prune:
+            self.root = Node(data,labels,None,self,1)
+        else:
+            # for pruning, split into train and validate
+            trainSize = data.shape[0] * .7
+            trainData, valData, trainLab, valLab = train_test_split(
+                data, labels, test_size=0.33, random_state=42)
+            # train on training partition
+            self.root = Node(trainData, trainLab, None, self, 1)
+            self.root.pruneClassify(valData, valLab)
+        
         #Every node has two children pointers and a parent pointer to make pruning easier.
 
     def classify(self,data):
@@ -103,6 +115,10 @@ class Node:
         self.featureIndex = None
 
         self.label = None
+
+        # count examples that pass through each node
+        self.yesCounter = 0
+        self.noCounter = 0
 
         self.train(data,labels)
 
@@ -177,3 +193,17 @@ class Node:
             return label
         else:
             return self.label
+
+    def pruneClassify(self,point,label):
+        if self.left and self.right:
+            if point[self.featureIndex] == True:
+                label = self.left.pruneClassify(point,label)
+            else:
+                label = self.right.pruneClassify(point,label)
+            ipdb.set_trace()
+            ipdb.pm()
+            return label
+        else:
+            return self.label
+
+
