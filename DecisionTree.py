@@ -91,7 +91,8 @@ class DecisionTree2:
                 data, labels, test_size=0.33, random_state=42)
             # train on training partition
             self.root = Node(trainData, trainLab, None, self, 1)
-            self.root.pruneClassify(valData, valLab)
+            self.pruneClassify(valData, valLab)
+            self.root.prune()
         
         #Every node has two children pointers and a parent pointer to make pruning easier.
 
@@ -100,6 +101,14 @@ class DecisionTree2:
         i = 0
         for point in data:
             y[i] = self.root.classify(point)
+            i += 1
+        return y
+
+    def pruneClassify(self,data, labels):
+        y = np.zeros((data.shape[0],1))
+        i = 0
+        for point in data:
+            y[i] = self.root.pruneClassify(point, labels[i])
             i += 1
         return y
 
@@ -117,8 +126,13 @@ class Node:
         self.label = None
 
         # count examples that pass through each node
-        self.yesCounter = 0
-        self.noCounter = 0
+        self.actualCount = [0, 0]
+
+        # count misclassifications and examples thru node
+        self.misclassified = 0
+
+        # validation error for subtree rooted at node
+        self.error = 0
 
         self.train(data,labels)
 
@@ -197,13 +211,33 @@ class Node:
     def pruneClassify(self,point,label):
         if self.left and self.right:
             if point[self.featureIndex] == True:
-                label = self.left.pruneClassify(point,label)
+                assignedlabel = self.left.pruneClassify(point, label)
             else:
-                label = self.right.pruneClassify(point,label)
-            ipdb.set_trace()
-            ipdb.pm()
-            return label
+                assignedlabel = self.right.pruneClassify(point, label)
         else:
-            return self.label
+            assignedlabel = self.label
 
+        # count labels assigned and actual to prune after
+        self.actualCount[assignedlabel] += 1
 
+        # calc error over subtree rooted at node
+        if assignedlabel != label:
+            self.misclassified += 1
+        self.error = self.misclassified / sum(self.actualCount)
+
+        return assignedlabel
+
+    def prune(self):
+        # must be called AFTER pruneclassification!
+        if self.left and self.right:
+            if sum(self.actualCount):
+                pruneError = min(self.actualCount) / sum(self.actualCount)
+            else:
+                pruneError = 1
+            if pruneError < self.error:
+                self.left = None
+                self.right = None
+                self.label = np.argmax(self.actualCount)
+            else:
+                self.left.prune()
+                self.right.prune()
