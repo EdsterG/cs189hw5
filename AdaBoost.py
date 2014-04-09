@@ -4,7 +4,7 @@ import warnings
 import ipdb
 
 class AdaBoost:
-    def __init__(self, data, y, Classifier=DecisionTree2, params=[0,0,0]):
+    def __init__(self, data, y, Classifier=DecisionTree, params=[0,0,0,0]):
         # params is list of parameters for given Classifier
         self.Classifier = Classifier
 

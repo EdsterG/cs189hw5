@@ -63,7 +63,7 @@
 %   BEGIN DOCUMENT
 %----------------------------------------------------------------------------------------
 
-% -------------------- PROBLEM 1 --------------------
+% -------------------- PART 1 --------------------
 {\Large 1. \indent Implementation and Features}
 \\
 \begin{enumerate}[(1)]
@@ -107,17 +107,35 @@
 
 \end{enumerate}
 
-\newpage % -------------------- PROBLEM 2 --------------------
+\newpage % -------------------- PART 2 --------------------
  {\Large 2. \indent Results and Analysis}
 \\
 
-\begin{enumerate}[(i)]
-\item 10-fold cross validation for decision trees was around 9.3\% error.
+\begin{enumerate}[(a)]
+\item 10-fold cross validation for decision trees was around 9.4\% error.
+\begin{enumerate}[-]
+\item Limiting the depth to about 20 gave 0.5\% improvement.
+\item This version of pruning didn't seem to give much improvement.
+\item Gini impurity and Entropy gave almost exactly the same results, which makes sense because those two functions are very similar. 
+\item Misclassification impurity performed worse than the other two impurity measures.
+\end{enumerate}
 \item 10-fold cross validation for random forests is in the range of 6.2\%6.8\% error.
 \begin{enumerate}[-]
-\item Surprisingly, splitting on 17 randomly chosen features was better than any other value. 
+\item Surprisingly, splitting on 17 randomly chosen features was better than any other value.
+\item Randomly sampling the data vs sampling both the features and the data showed no significant difference during cross validation.
 \end{enumerate}
 \item 10-fold cross validation for adaboost (4 itterations) is around 12.4\%
+\end{enumerate}
+$\\
+\\
+\\$
+
+ {\Large 3. \indent Resources and Extra Info}
+\\
+
+\begin{enumerate}[(i)]
+\item We used the pdf files that came with the hw, along with some examples from the scipy api for cross validation.
+\item The libraries we used are all described in README.txt
 \end{enumerate}
 
 \end{document}
