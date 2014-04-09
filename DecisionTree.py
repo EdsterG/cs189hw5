@@ -1,5 +1,8 @@
 from utils import *
 
+from sklearn.cross_validation import train_test_split
+# only used for experimental pruning
+
 class DecisionTree:
 
     def __init__(self,data,labels,features=None,depth=None):
@@ -70,7 +73,7 @@ class DecisionTree2:
         else:
             self.validFeatures = validFeatures
 
-        if self.sampleData == True:
+        if self.sampleData:
             #sampleSize = np.random.randint(1,data.shape[0])
             sampleSize = data.shape[0]*0.8
             dataIndices = np.random.randint(data.shape[0],size=sampleSize)
@@ -78,9 +81,19 @@ class DecisionTree2:
             dataIndices = np.arange(data.shape[0])
         data = data[dataIndices,:]
         labels = labels[dataIndices]
-        self.root = Node(data,labels,None,self,1)
 
-        #After the full tree is built it can be pruned up from the leaves.
+        if not self.prune:
+            self.root = Node(data,labels,None,self,1)
+        else:
+            # for pruning, split into train and validate
+            trainSize = data.shape[0] * .7
+            trainData, valData, trainLab, valLab = train_test_split(
+                data, labels, test_size=0.33, random_state=42)
+            # train on training partition
+            self.root = Node(trainData, trainLab, None, self, 1)
+            self.pruneClassify(valData, valLab)
+            self.root.prune()
+        
         #Every node has two children pointers and a parent pointer to make pruning easier.
 
     def classify(self,data):
@@ -88,6 +101,14 @@ class DecisionTree2:
         i = 0
         for point in data:
             y[i] = self.root.classify(point)
+            i += 1
+        return y
+
+    def pruneClassify(self,data, labels):
+        y = np.zeros((data.shape[0],1))
+        i = 0
+        for point in data:
+            y[i] = self.root.pruneClassify(point, labels[i])
             i += 1
         return y
 
@@ -103,6 +124,15 @@ class Node:
         self.featureIndex = None
 
         self.label = None
+
+        # count examples that pass through each node
+        self.actualCount = [0, 0]
+
+        # count misclassifications and examples thru node
+        self.misclassified = 0
+
+        # validation error for subtree rooted at node
+        self.error = 0
 
         self.train(data,labels)
 
@@ -178,3 +208,37 @@ class Node:
             return label
         else:
             return self.label
+
+    def pruneClassify(self,point,label):
+        if self.left and self.right:
+            if point[self.featureIndex] == True:
+                assignedlabel = self.left.pruneClassify(point, label)
+            else:
+                assignedlabel = self.right.pruneClassify(point, label)
+        else:
+            assignedlabel = self.label
+
+        # count labels assigned and actual to prune after
+        self.actualCount[assignedlabel] += 1
+
+        # calc error over subtree rooted at node
+        if assignedlabel != label:
+            self.misclassified += 1
+        self.error = self.misclassified / sum(self.actualCount)
+
+        return assignedlabel
+
+    def prune(self):
+        # must be called AFTER pruneclassification!
+        if self.left and self.right:
+            if sum(self.actualCount):
+                pruneError = min(self.actualCount) / sum(self.actualCount)
+            else:
+                pruneError = 1
+            if pruneError < self.error:
+                self.left = None
+                self.right = None
+                self.label = np.argmax(self.actualCount)
+            else:
+                self.left.prune()
+                self.right.prune()

@@ -1,4 +1,3 @@
-from scipy import stats
 from utils import *
 from DecisionTree import *
 import warnings

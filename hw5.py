@@ -73,7 +73,7 @@ def cross_validation():
 
 def decision_tree2():
     print "Initilizaing/Training decision tree"
-    dt = DecisionTree2(X,y,sampleFeatures=True,sampleData=True)
+    dt = DecisionTree2(X,y,prune=True)
     print "Traning Complete"
 
     print "Classifying training set"
@@ -93,7 +93,7 @@ def random_forest2():
 
 if __name__ == '__main__':
     "Main Method"
-    #decision_tree2()
+    decision_tree2()
     #random_forest2()
     #crossValidate(X,y,RandomForest2,num_folds=10,M=100)
     #crossValidate(X,y,DecisionTree)
